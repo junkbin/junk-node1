@@ -32,7 +32,7 @@ let mainDecipher = ()=>{
 }
 
 
-let main = ()=>{
+let mainEcdh = ()=>{
 
     // Generate Alice's keys...
     const alice = crypto.createECDH('secp521r1');
@@ -47,6 +47,35 @@ let main = ()=>{
     const bobSecret = bob.computeSecret(aliceKey);
 
     console.log(aliceSecret.toString('hex'), bobSecret.toString('hex'));
+}
+
+
+let mainSign = ()=>{
+    const crypto = require('crypto');
+    const sign = crypto.createSign('SHA256');
+
+    sign.update('some data to sign');
+
+    const privateKey = "ABCD";
+    console.log(sign.sign(privateKey, 'hex'));
+}
+
+
+let main = ()=>{
+    const { PerformanceObserver, performance } = require('perf_hooks');
+
+    const obs = new PerformanceObserver((items) => {
+      console.log(items.getEntries()[0].duration);
+      performance.clearMarks();
+    });
+    obs.observe({ entryTypes: ['measure'] });
+    
+    performance.mark('A');
+    setTimeout(() => {
+      performance.mark('B');
+      performance.measure('A to B', 'A', 'B');
+    }, 5000);
+    
 }
 
 main();
